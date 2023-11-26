@@ -32,18 +32,92 @@ from nerfstudio.cameras.rays import RaySamples
 from nerfstudio.field_components.embedding import Embedding
 from nerfstudio.field_components.encodings import (
     NeRFEncoding,
-    PeriodicVolumeEncoding,
     TensorVMEncoding,
 )
 from nerfstudio.field_components.field_heads import FieldHeadNames
 from nerfstudio.field_components.spatial_distortions import SpatialDistortion
 from nerfstudio.fields.base_field import Field, FieldConfig
 
+from bakedangelo.field_components.encodings import PeriodicVolumeEncoding
+
 try:
     import tinycudann as tcnn
 except ImportError:
     # tinycudann module doesn't exist
     pass
+
+
+class LaplaceDensity(nn.Module):  # alpha * Laplace(loc=0, scale=beta).cdf(-sdf)
+    """Laplace density from VolSDF"""
+
+    def __init__(self, init_val, beta_min=0.0001):
+        super().__init__()
+        self.register_parameter("beta_min", nn.Parameter(beta_min * torch.ones(1), requires_grad=False))
+        self.register_parameter("beta", nn.Parameter(init_val * torch.ones(1), requires_grad=True))
+
+    def forward(
+        self, sdf: TensorType["bs":...], beta: Union[TensorType["bs":...], None] = None
+    ) -> TensorType["bs":...]:
+        """convert sdf value to density value with beta, if beta is missing, then use learable beta"""
+
+        if beta is None:
+            beta = self.get_beta()
+
+        alpha = 1.0 / beta
+        return alpha * (0.5 + 0.5 * sdf.sign() * torch.expm1(-sdf.abs() / beta))
+
+    def get_beta(self):
+        """return current beta value"""
+        beta = self.beta.abs() + self.beta_min
+        return beta
+
+
+class SigmoidDensity(nn.Module):  # alpha * Laplace(loc=0, scale=beta).cdf(-sdf)
+    """Sigmoid density from VolSDF"""
+
+    def __init__(self, init_val, beta_min=0.0001):
+        super().__init__()
+        self.register_parameter("beta_min", nn.Parameter(beta_min * torch.ones(1), requires_grad=False))
+        self.register_parameter("beta", nn.Parameter(init_val * torch.ones(1), requires_grad=True))
+
+    def forward(
+        self, sdf: TensorType["bs":...], beta: Union[TensorType["bs":...], None] = None
+    ) -> TensorType["bs":...]:
+        """convert sdf value to density value with beta, if beta is missing, then use learable beta"""
+
+        if beta is None:
+            beta = self.get_beta()
+
+        alpha = 1.0 / beta
+
+        # negtive sdf will have large density
+        return alpha * torch.sigmoid(-sdf * alpha)
+
+    def get_beta(self):
+        """return current beta value"""
+        beta = self.beta.abs() + self.beta_min
+        return beta
+
+
+class SingleVarianceNetwork(nn.Module):
+    """Variance network in NeuS
+
+    Args:
+        nn (_type_): init value in NeuS variance network
+    """
+
+    def __init__(self, init_val):
+        super(SingleVarianceNetwork, self).__init__()
+        self.register_parameter("variance", nn.Parameter(init_val * torch.ones(1), requires_grad=True))
+
+    def forward(self, x):
+        """Returns current variance value"""
+        return torch.ones([len(x), 1], device=x.device) * torch.exp(self.variance * 10.0)
+
+    def get_variance(self):
+        """return current variance value"""
+        return torch.exp(self.variance * 10.0).clip(1e-6, 1e6)
+
 
 @dataclass
 class SDFFieldConfig(FieldConfig):

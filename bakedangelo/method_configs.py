@@ -22,6 +22,7 @@ from nerfstudio.engine.trainer import TrainerConfig
 from nerfstudio.plugins.types import MethodSpecification
 from nerfstudio.data.datamanagers.base_datamanager import VanillaDataManagerConfig
 from nerfstudio.data.dataparsers.sdfstudio_dataparser import SDFStudioDataParserConfig
+
 from bakedangelo.fields.sdf_field import SDFFieldConfig
 
 from bakedangelo.engine.schedulers  import MultiStepWarmupSchedulerConfig 
