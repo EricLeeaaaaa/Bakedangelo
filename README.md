@@ -1,3 +1,11 @@
+# Latest News
+
+I gave up, because I can't debug some of my code, since I was just a junior high student and had a lack of code experience.
+
+Please consider PR if you know how to fix, thx.
+
+## Old Readme:
+
 # Bakedangelo
 Unofficial implementation of Neuralangelo to NerfStudio
 
