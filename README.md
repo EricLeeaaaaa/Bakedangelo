@@ -6,7 +6,9 @@ Unofficial implementation of Neuralangelo to NerfStudio
 [Nerfstudio]https://github.com/nerfstudio-project/nerfstudio
 
 Usage:
+
 ```
+pip install git+https://github.com/NVlabs/tiny-cuda-nn/#subdirectory=bindings/torch
 git clone https://github.com/EricLeeaaaaa/Bakedangelo.git
 cd Bakedangelo
 pip install -e .
