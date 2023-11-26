@@ -35,7 +35,7 @@ from nerfstudio.field_components.field_heads import FieldHeadNames
 from nerfstudio.fields.density_fields import HashMLPDensityField
 from nerfstudio.model_components.losses import interlevel_loss
 from nerfstudio.model_components.ray_samplers import ProposalNetworkSampler
-from bakedangelo.volsdf import VolSDFModel, VolSDFModelConfig
+from bakedangelo.models.volsdf import VolSDFModel, VolSDFModelConfig
 from nerfstudio.utils import colormaps
 
 

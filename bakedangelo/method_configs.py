@@ -22,10 +22,10 @@ from nerfstudio.engine.trainer import TrainerConfig
 from nerfstudio.plugins.types import MethodSpecification
 from nerfstudio.data.datamanagers.base_datamanager import VanillaDataManagerConfig
 from nerfstudio.data.dataparsers.sdfstudio_dataparser import SDFStudioDataParserConfig
-from nerfstudio.fields.sdf_field import SDFFieldConfig
+from bakedangelo.fields.sdf_field import SDFFieldConfig
 
 from bakedangelo.engine.schedulers  import MultiStepWarmupSchedulerConfig 
-from bakedangelo.bakedangelo import BakedAngeloModelConfig
+from bakedangelo.models.bakedangelo import BakedAngeloModelConfig
 
 
 bakedangelo = MethodSpecification(
@@ -57,13 +57,13 @@ bakedangelo = MethodSpecification(
                     beta_init=0.1,
                     inside_outside=True,
                     use_appearance_embedding=True,
-                    #use_numerical_gradients=True,
+                    use_numerical_gradients=True,
                     base_res=64,
                     max_res=4096,
                     log2_hashmap_size=22,
                     features_per_level=8,
                     smoothstep=False,
-                    #use_position_encoding=False,
+                    use_position_encoding=False,
                 ),
                 eikonal_loss_mult=0.01,
                 background_model="grid",
