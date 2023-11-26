@@ -23,7 +23,7 @@ from typing import Dict, Type
 
 from nerfstudio.cameras.rays import RayBundle
 from nerfstudio.field_components.field_heads import FieldHeadNames
-from nerfstudio.model_components.ray_samplers import ErrorBoundedSampler
+from bakedangelo.model_components.ray_samplers import ErrorBoundedSampler
 from nerfstudio.models.base_surface_model import SurfaceModel, SurfaceModelConfig
 
 
