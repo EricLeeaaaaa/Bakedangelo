@@ -12,3 +12,7 @@ cd Bakedangelo
 pip install -e .
 ns-train bakedangelo --data DATA_DIR
 ```
+
+### Warning: This project is WIP, Don't use it.
+
+However, you can still make PR to help me.
