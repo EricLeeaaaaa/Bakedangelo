@@ -1,10 +1,10 @@
 # Latest News
 
-I gave up, because I can't debug some of my code, since I was just a junior high student and had a lack of code experience.
+I gave up, because there is a more powerful project called 3D Gaussian Splatting
 
-Please consider PR if you know how to fix, thx.
+Also, there's a lot of bugs in my project, so don't use it except you want to fix it. Just fork it.
 
-## Old Readme:
+## Original Readme:
 
 # Bakedangelo
 Unofficial implementation of Neuralangelo to NerfStudio
